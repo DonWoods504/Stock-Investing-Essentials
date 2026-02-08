@@ -243,3 +243,69 @@ footer {
   background-color: #555;
   color: #fff;
 }
+.resource-item {
+    background-color: #f9f9f9;          /* Light gray background for contrast */
+    border: 1px solid #ddd;             /* Subtle border */
+    border-radius: 8px;                 /* Rounded corners */
+    padding: 1.5rem;                    /* Inner spacing */
+    margin-bottom: 1.5rem;              /* Space between items */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Soft shadow for depth */
+    transition: transform 0.2s, box-shadow 0.2s; /* Smooth hover */
+}
+
+.resource-item:hover {
+    transform: translateY(-3px);        /* Lift on hover */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.resource-item i {
+    font-size: 2rem;                    /* Bigger icon */
+    color: #4a90e2;                     /* Accent color – change to match your site's primary color */
+    margin-right: 1rem;
+    float: left;                        /* Icon on left */
+}
+
+.resource-item h3 {
+    margin-top: 0;                      /* No extra top margin */
+    color: #333;
+}
+
+.resource-item p {
+    margin: 0.5rem 0 1rem 0;
+    color: #555;
+}
+
+.resource-item a {
+    color: #4a90e2;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.resource-item a:hover {
+    text-decoration: underline;
+}
+
+/* Button class - for Back to Home, Buy on Amazon, etc. */
+.btn {
+    display: inline-block;
+    background-color: #4a90e2;          /* Primary blue – adjust to your site's accent */
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    margin-top: 1rem;                   /* Space above button */
+}
+
+.btn:hover {
+    background-color: #357abd;          /* Darker blue on hover */
+}
+
+.btn.secondary {                        /* Optional variant for less prominent buttons */
+    background-color: #6c757d;
+}
+
+.btn.secondary:hover {
+    background-color: #5a6268;
+}
