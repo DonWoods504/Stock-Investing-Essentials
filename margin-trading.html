@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Margin Trading – Rewards & Risks - Stock Investing Essentials</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .calculator, .chart-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            max-width: 700px;
+            margin: 2rem auto;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .warning {
+            color: #dc3545;
+            font-weight: 600;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #fff5f5;
+            border-radius: 6px;
+        }
+        #result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 5px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand"><a href="index.html">Stock Investing Essentials</a></div>
+            <ul class="nav-menu">
+                <li><a href="basics.html">Basics</a></li>
+                <li><a href="value-investing.html">Value Investing</a></li>
+                <li><a href="margin-trading.html">Margin Trading</a></li>
+                <li><a href="famous-investors.html">Investors</a></li>
+                <li><a href="key-rules.html">Key Rules</a></li>
+            </ul>
+            <div class="hamburger"><span></span><span></span><span></span></div>
+        </nav>
+    </header>
+
+    <section class="hero" style="padding: 3rem 2rem;">
+        <div class="hero-content">
+            <h1>Margin Trading in Stocks</h1>
+            <p>Borrowing to buy more shares — how it amplifies profits… and losses.</p>
+        </div>
+    </section>
+
+    <div class="calculator">
+        <div class="warning">
+            <strong>Warning:</strong> This is an educational simulation only. Real margin trading includes interest costs, margin calls, fees and high risk of losing more than your initial capital.
+        </div>
+
+        <form id="marginForm">
+            <div class="form-group">
+                <label for="equity">Your equity / cash ($):</label>
+                <input type="number" id="equity" value="10000" min="1000" step="100" required>
+            </div>
+
+            <div class="form-group">
+                <label for="initialMargin">Initial margin requirement (%):</label>
+                <input type="number" id="initialMargin" value="50" min="10" max="100" step="5" required>
+                <small>(50% = you put up half, broker lends half)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="priceChange">Stock price change to simulate (%):</label>
+                <input type="number" id="priceChange" value="20" step="0.5" required>
+                <small>Positive = gain, negative = loss</small>
+            </div>
+
+            <button type="submit">Calculate & Update Chart</button>
+        </form>
+
+        <div id="result" style="display:none;">
+            <h3>Results (single scenario)</h3>
+            <p id="positionSize"></p>
+            <p id="borrowed"></p>
+            <p id="profitNoMargin"></p>
+            <p id="profitWithMargin"></p>
+            <p id="returnNoMargin"></p>
+            <p id="returnWithMargin"></p>
+        </div>
+
+        <div class="chart-container">
+            <h3>Dynamic Return Comparison Chart</h3>
+            <canvas id="leverageChart" height="280"></canvas>
+            <p style="text-align:center; margin-top:1rem; font-style:italic; color:#555;">
+                Blue = No margin | Red = With margin (your equity leveraged)
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Dr. Don Woods. Built with Grok's help. | <a href="index.html">Home</a></p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        let chart;
+
+        function updateChart(equity, initialMarginPct) {
+            const leverage = 1 / initialMarginPct; // e.g. 50% → 2x
+            const changes = [];
+            const noLeverage = [];
+            const withLeverage = [];
+
+            for (let i = -50; i <= 50; i += 2) {
+                const change = i / 100;
+                changes.push(i);
+
+                // No margin: return = stock change
+                noLeverage.push(change * 100);
+
+                // With margin: return on equity = change × leverage
+                withLeverage.push(change * leverage * 100);
+            }
+
+            const ctx = document.getElementById('leverageChart').getContext('2d');
+
+            if (chart) chart.destroy();
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: changes,
+                    datasets: [
+                        {
+                            label: 'No Margin',
+                            data: noLeverage,
+                            borderColor: '#007bff',
+                            backgroundColor: 'rgba(0,123,255,0.1)',
+                            tension: 0.1,
+                            fill: true
+                        },
+                        {
+                            label: `${leverage.toFixed(1)}× Leverage`,
+                            data: withLeverage,
+                            borderColor: '#dc3545',
+                            backgroundColor: 'rgba(220,53,69,0.1)',
+                            tension: 0.1,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: 'Stock Price Change (%)' } },
+                        y: { title: { display: true, text: 'Return on Your Equity (%)' } }
+                    },
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: { mode: 'index', intersect: false }
+                    }
+                }
+            });
+        }
+
+        document.getElementById('marginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const equity = parseFloat(document.getElementById('equity').value);
+            const initialMarginPct = parseFloat(document.getElementById('initialMargin').value) / 100;
+            const priceChangePct = parseFloat(document.getElementById('priceChange').value) / 100;
+
+            const positionSize = equity / initialMarginPct;
+            const borrowed = positionSize - equity;
+            const valueChange = positionSize * priceChangePct;
+            const profitNoMargin = equity * priceChangePct;
+            const profitWithMargin = valueChange;
+
+            const returnNoMargin = (profitNoMargin / equity) * 100;
+            const returnWithMargin = (profitWithMargin / equity) * 100;
+
+            document.getElementById('positionSize').innerHTML = `<strong>Position size controlled:</strong> $${positionSize.toLocaleString()}`;
+            document.getElementById('borrowed').innerHTML = `<strong>Borrowed amount:</strong> $${borrowed.toLocaleString()} (if any)`;
+            document.getElementById('profitNoMargin').innerHTML = `<strong>Profit/loss without margin:</strong> $${profitNoMargin.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} (${returnNoMargin.toFixed(2)}%)`;
+            document.getElementById('profitWithMargin').innerHTML = `<strong>Profit/loss with margin:</strong> $${profitWithMargin.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} (${returnWithMargin.toFixed(2)}% on equity)`;
+
+            document.getElementById('result').style.display = 'block';
+
+            // Update dynamic chart
+            updateChart(equity, initialMarginPct);
+        });
+
+        // Initial chart on page load
+        window.onload = () => {
+            const equity = parseFloat(document.getElementById('equity').value);
+            const initialMarginPct = parseFloat(document.getElementById('initialMargin').value) / 100;
+            updateChart(equity, initialMarginPct);
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+    font-family: 'Inter', sans-serif; 
+    line-height: 1.6; 
+    color: #333; 
+    background: #f9f9f9; 
+}
+
+.navbar { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 1rem 2rem; 
+    background: #fff; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+}
+.nav-brand { 
+    font-size: 1.5rem; 
+    font-weight: 700; 
+    color: #007bff; 
+}
+.nav-menu { 
+    display: flex; 
+    list-style: none; 
+    gap: 2rem; 
+}
+.nav-menu a { 
+    text-decoration: none; 
+    color: #333; 
+    font-weight: 600; 
+}
+.hamburger { 
+    display: none; 
+    flex-direction: column; 
+    cursor: pointer; 
+}
+.hamburger span { 
+    width: 25px; 
+    height: 3px; 
+    background: #333; 
+    margin: 3px 0; 
+}
+
+.hero { 
+    background: linear-gradient(135deg, #007bff, #0056b3); 
+    color: white; 
+    text-align: center; 
+    padding: 4rem 2rem; 
+}
+.hero h1 { 
+    font-size: 3rem; 
+    margin-bottom: 1rem; 
+}
+.hero p { 
+    font-size: 1.2rem; 
+    margin-bottom: 2rem; 
+}
+blockquote { 
+    font-style: italic; 
+    font-size: 1.1rem; 
+    margin: 2rem 0; 
+    border-left: 4px solid #fff; 
+    padding-left: 1rem; 
+}
+.cta-btn { 
+    background: #fff; 
+    color: #007bff; 
+    padding: 1rem 2rem; 
+    text-decoration: none; 
+    border-radius: 5px; 
+    font-weight: 600; 
+}
+
+.teasers { 
+    padding: 4rem 2rem; 
+    max-width: 1200px; 
+    margin: 0 auto; 
+}
+.teasers h2 { 
+    text-align: center; 
+    font-size: 2.5rem; 
+    margin-bottom: 3rem; 
+    color: #007bff; 
+}
+.cards { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 2rem; 
+}
+.card { 
+    background: white; 
+    padding: 2rem; 
+    border-radius: 10px; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+    text-align: center; 
+    transition: transform 0.3s; 
+}
+.card:hover { 
+    transform: translateY(-5px); 
+}
+.card i { 
+    font-size: 3rem; 
+    color: #007bff; 
+    margin-bottom: 1rem; 
+}
+.card h3 { 
+    font-size: 1.5rem; 
+    margin-bottom: 1rem; 
+}
+.card a { 
+    color: #007bff; 
+    text-decoration: none; 
+    font-weight: 600; 
+}
+
+footer { 
+    background: #333; 
+    color: white; 
+    text-align: center; 
+    padding: 2rem; 
+}
+.social a { 
+    color: white; 
+    font-size: 1.5rem; 
+    margin: 0 1rem; 
+}
+
+@media (max-width: 768px) {
+    .nav-menu { 
+        display: none; 
+        flex-direction: column; 
+        position: absolute; 
+        top: 70px; 
+        left: 0; 
+        width: 100%; 
+        background: white; 
+        padding: 1rem; 
+        box-shadow: 0 5px 10px rgba(0,0,0,0.2); 
+    }
+    .nav-menu.active { 
+        display: flex; 
+    }
+    .hamburger { 
+        display: flex; 
+    }
+    .hero h1 { 
+        font-size: 2rem; 
+    }
+}
+.content-section h2 {
+    font-size: 2rem;
+    color: #007bff;
+    margin: 2rem 0 1rem;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 0.5rem;
+}
+
+.term-card {
+    background: white;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.term-card h3 {
+    color: #007bff;
+    margin-bottom: 0.8rem;
+}
+
+.next-step {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    text-align: center;
+}.rule-card {
+    background: white;
+    padding: 2rem;
+    margin: 1.5rem 0;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-left: 6px solid #007bff;
+}
+
+.rule-card h2 {
+    color: #007bff;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+}
+
+.rule-card p {
+    margin-bottom: 1rem;
+.example-box {
+    background: #f0f8ff;
+    border-left: 5px solid #007bff;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 6px;
+}
+
+.example-box.warning {
+    background: #fff3f3;
+    border-left-color: #dc3545;
+}
+
+.risk-list li {
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.warning {
+    color: #dc3545;
+    font-weight: 600;
+    margin: 1rem 0;
+}

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Options Trading Simulator - Stock Investing Essentials</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .calculator {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            max-width: 700px;
+            margin: 2rem auto;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .warning {
+            color: #dc3545;
+            font-weight: 600;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #fff5f5;
+            border-radius: 6px;
+        }
+        #result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 5px solid #007bff;
+        }
+        .chart-container {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        canvas {
+            max-height: 400px;
+        }
+        small {
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand"><a href="index.html">Stock Investing Essentials</a></div>
+            <ul class="nav-menu">
+                <li><a href="basics.html">Basics</a></li>
+                <li><a href="value-investing.html">Value Investing</a></li>
+                <li><a href="margin-trading.html">Margin Trading</a></li>
+                <li><a href="options-simulator.html">Options Simulator</a></li>
+                <li><a href="famous-investors.html">Investors</a></li>
+                <li><a href="key-rules.html">Key Rules</a></li>
+            </ul>
+            <div class="hamburger"><span></span><span></span><span></span></div>
+        </nav>
+    </header>
+
+    <section class="hero" style="padding: 3rem 2rem;">
+        <div class="hero-content">
+            <h1>Options Trading Simulator</h1>
+            <p>Explore call and put payoffs at expiration. See theoretical pricing and profit/loss curves.</p>
+            <p class="warning"><strong>Disclaimer:</strong> Options involve high risk, including total loss of premium. This is educational only — not trading advice.</p>
+        </div>
+    </section>
+
+    <div class="calculator">
+        <form id="optionsForm">
+            <div class="form-group">
+                <label for="stockPrice">Current stock price ($):</label>
+                <input type="number" id="stockPrice" value="100" min="1" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label for="strike">Strike price ($):</label>
+                <input type="number" id="strike" value="105" min="1" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label for="optionType">Option type:</label>
+                <select id="optionType">
+                    <option value="call">Call (bullish)</option>
+                    <option value="put">Put (bearish)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="daysToExp">Days to expiration:</label>
+                <input type="number" id="daysToExp" value="30" min="1" max="365" required>
+                <small>Higher = more time value</small>
+            </div>
+
+            <div class="form-group">
+                <label for="volatility">Implied volatility (%):</label>
+                <input type="number" id="volatility" value="30" min="1" max="200" step="1" required>
+                <small>Annualized; higher = more premium</small>
+            </div>
+
+            <div class="form-group">
+                <label for="riskFree">Risk-free rate (%):</label>
+                <input type="number" id="riskFree" value="4" min="0" max="20" step="0.1" required>
+                <small>Like Treasury yield</small>
+            </div>
+
+            <button type="submit">Simulate Option</button>
+        </form>
+
+        <div id="result" style="display:none;">
+            <h3>Results</h3>
+            <p id="premium"></p>
+            <p id="breakeven"></p>
+            <p id="maxProfit"></p>
+            <p id="maxLoss"></p>
+        </div>
+
+        <div class="chart-container">
+            <h3>Payoff at Expiration</h3>
+            <canvas id="payoffChart"></canvas>
+            <p style="margin-top:1rem; font-style:italic; color:#555;">
+                Green = Profit | Red = Loss | Black = Breakeven
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Dr. Don Woods. Built with Grok's help. | <a href="index.html">Home</a></p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        let payoffChart;
+
+        // Simplified Black-Scholes for option pricing (educational approximation)
+        function blackScholes(S, K, T, r, sigma, type) {
+            const d1 = (Math.log(S / K) + (r + 0.5 * sigma * sigma) * T) / (sigma * Math.sqrt(T));
+            const d2 = d1 - sigma * Math.sqrt(T);
+            const N = (x) => 0.5 * (1 + erf(x / Math.sqrt(2))); // Normal CDF approx
+
+            if (type === 'call') {
+                return S * N(d1) - K * Math.exp(-r * T) * N(d2);
+            } else {
+                return K * Math.exp(-r * T) * N(-d2) - S * N(-d1);
+            }
+        }
+
+        function erf(x) {
+            const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741;
+            const a4 = -1.453152027, a5 = 1.061405429, p = 0.3275911;
+            const sign = x >= 0 ? 1 : -1;
+            x = Math.abs(x);
+            const t = 1 / (1 + p * x);
+            const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+            return sign * y;
+        }
+
+        document.getElementById('optionsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const S = parseFloat(document.getElementById('stockPrice').value);
+            const K = parseFloat(document.getElementById('strike').value);
+            const type = document.getElementById('optionType').value;
+            const days = parseInt(document.getElementById('daysToExp').value);
+            const sigma = parseFloat(document.getElementById('volatility').value) / 100;
+            const r = parseFloat(document.getElementById('riskFree').value) / 100;
+
+            const T = days / 365; // Years
+
+            // Calculate theoretical premium
+            const premium = blackScholes(S, K, T, r, sigma, type);
+
+            // Breakeven
+            const breakeven = type === 'call' ? K + premium : K - premium;
+
+            // Max profit/loss at expiration (unlimited for calls, limited for puts)
+            const maxProfit = type === 'call' ? 'Unlimited' : K - breakeven;
+            const maxLoss = -premium;
+
+            document.getElementById('premium').innerHTML = `<strong>Theoretical premium (price to pay):</strong> $${premium.toFixed(2)}`;
+            document.getElementById('breakeven').innerHTML = `<strong>Breakeven stock price:</strong> $${breakeven.toFixed(2)}`;
+            document.getElementById('maxProfit').innerHTML = `<strong>Max profit:</strong> ${maxProfit}`;
+            document.getElementById('maxLoss').innerHTML = `<strong>Max loss:</strong> $${Math.abs(maxLoss).toFixed(2)} (premium paid)`;
+
+            document.getElementById('result').style.display = 'block';
+
+            // Generate payoff data for chart
+            const stockPrices = [];
+            const payoffs = [];
+            const minPrice = Math.max(0, S * 0.5);
+            const maxPrice = S * 1.5;
+            const step = (maxPrice - minPrice) / 50;
+
+            for (let price = minPrice; price <= maxPrice; price += step) {
+                stockPrices.push(price);
+                let payoff = type === 'call' ? Math.max(0, price - K) : Math.max(0, K - price);
+                payoff -= premium; // Subtract premium paid
+                payoffs.push(payoff);
+            }
+
+            const ctx = document.getElementById('payoffChart').getContext('2d');
+
+            if (payoffChart) payoffChart.destroy();
+
+            payoffChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: stockPrices.map(p => p.toFixed(1)),
+                    datasets: [{
+                        label: `Payoff at Expiration (${type.toUpperCase()})`,
+                        data: payoffs,
+                        borderColor: payoffs.map(p => p >= 0 ? '#28a745' : '#dc3545'),
+                        backgroundColor: 'transparent',
+                        tension: 0.1,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: 'Stock Price at Expiration ($)' } },
+                        y: { title: { display: true, text: 'Profit/Loss ($ per share)' } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `P/L: $${context.parsed.y.toFixed(2)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        // Initial simulation on load
+        window.onload = () => {
+            document.getElementById('optionsForm').dispatchEvent(new Event('submit'));
+        };
+    </script>
+</body>
+</html>

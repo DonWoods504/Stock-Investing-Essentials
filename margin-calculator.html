@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Margin Trading Calculator - Stock Investing Essentials</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .calculator {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 5px solid #007bff;
+        }
+        .warning {
+            color: #dc3545;
+            font-weight: 600;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #fff5f5;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand"><a href="index.html">Stock Investing Essentials</a></div>
+            <ul class="nav-menu">
+                <li><a href="basics.html">Basics</a></li>
+                <li><a href="value-investing.html">Value Investing</a></li>
+                <li><a href="margin-trading.html">Margin Trading</a></li>
+                <li><a href="margin-calculator.html">Calculator</a></li>
+                <li><a href="famous-investors.html">Investors</a></li>
+                <li><a href="key-rules.html">Key Rules</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span><span></span><span></span>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero" style="padding: 3rem 2rem;">
+        <div class="hero-content">
+            <h1>Margin Trading Calculator</h1>
+            <p>See how borrowing money affects your potential profit and loss.</p>
+        </div>
+    </section>
+
+    <div class="calculator">
+        <div class="warning">
+            <strong>Important:</strong> This is a simplified educational tool. Real margin trading involves interest costs, maintenance margin calls, taxes, fees, and significant risk of loss greater than your initial investment. Use with caution.
+        </div>
+
+        <form id="marginForm">
+            <div class="form-group">
+                <label for="equity">Your cash/equity ($):</label>
+                <input type="number" id="equity" value="10000" min="1000" step="100" required>
+            </div>
+
+            <div class="form-group">
+                <label for="initialMargin">Initial margin requirement (% you must put up):</label>
+                <input type="number" id="initialMargin" value="50" min="10" max="100" step="5" required>
+                <small>Typical Reg T = 50%. Some brokers require more.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="totalInvestment">Total investment amount you want to control ($):</label>
+                <input type="number" id="totalInvestment" value="20000" min="1000" step="100" required>
+            </div>
+
+            <div class="form-group">
+                <label for="priceChange">Expected stock price change (%):</label>
+                <input type="number" id="priceChange" value="20" step="0.1" required>
+                <small>Positive = gain, negative = loss</small>
+            </div>
+
+            <button type="submit">Calculate</button>
+        </form>
+
+        <div id="result" style="display:none;">
+            <h3>Results</h3>
+            <p id="positionSize"></p>
+            <p id="borrowed"></p>
+            <p id="noMarginResult"></p>
+            <p id="withMarginResult"></p>
+            <p id="returnNoMargin"></p>
+            <p id="returnWithMargin"></p>
+            <p id="warningResult" class="warning"></p>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Dr. Don Woods. Built with Grok's help. | <a href="index.html">Home</a> | <a href="#">Contact</a></p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('marginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const equity = parseFloat(document.getElementById('equity').value);
+            const initialMarginPct = parseFloat(document.getElementById('initialMargin').value) / 100;
+            const desiredTotal = parseFloat(document.getElementById('totalInvestment').value);
+            const priceChangePct = parseFloat(document.getElementById('priceChange').value) / 100;
+
+            // Calculate max position size based on equity and margin requirement
+            const maxPosition = equity / initialMarginPct;
+
+            // Actual position = the smaller of desiredTotal and maxPosition
+            const positionSize = Math.min(desiredTotal, maxPosition);
+
+            const borrowed = positionSize - equity;
+
+            const valueChange = positionSize * priceChangePct;
+            const finalValue = positionSize + valueChange;
+
+            const profitNoMargin = equity * priceChangePct;
+            const profitWithMargin = valueChange; // since borrowed amount doesn't change
+
+            const returnNoMargin = (profitNoMargin / equity) * 100;
+            const returnWithMargin = (profitWithMargin / equity) * 100;
+
+            document.getElementById('positionSize').innerHTML = `<strong>Position size controlled:</strong> $${positionSize.toFixed(2)}`;
+            document.getElementById('borrowed').innerHTML = `<strong>Borrowed amount:</strong> $${borrowed.toFixed(2)} (if any)`;
+
+            document.getElementById('noMarginResult').innerHTML = `<strong>Without margin profit/loss:</strong> $${profitNoMargin.toFixed(2)} (${returnNoMargin.toFixed(2)}% return)`;
+            document.getElementById('withMarginResult').innerHTML = `<strong>With margin profit/loss:</strong> $${profitWithMargin.toFixed(2)} (${returnWithMargin.toFixed(2)}% return on your equity)`;
+
+            let warningText = "";
+            if (priceChangePct < 0) {
+                warningText = "Losses are amplified. A " + Math.abs(priceChangePct*100).toFixed(1) + "% drop could trigger a margin call depending on your broker's maintenance requirement.";
+            } else {
+                warningText = "Gains are amplified — but so are losses if the trade goes against you.";
+            }
+            document.getElementById('warningResult').innerHTML = warningText;
+
+            document.getElementById('result').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
