@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About & Contact - Stock Investing Essentials</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .about-section, .contact-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin: 2rem auto;
+            max-width: 800px;
+        }
+        .about-section h2, .contact-section h2 {
+            color: #007bff;
+            margin-bottom: 1rem;
+        }
+        .social-links a {
+            font-size: 2rem;
+            margin: 0 1rem;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .social-links a:hover {
+            color: #0056b3;
+        }
+        form {
+            margin-top: 2rem;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        button[type="submit"] {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand"><a href="index.html">Stock Investing Essentials</a></div>
+            <ul class="nav-menu">
+                <li><a href="basics.html">Basics</a></li>
+                <li><a href="value-investing.html">Value Investing</a></li>
+                <li><a href="margin-trading.html">Margin Trading</a></li>
+                <li><a href="options-simulator.html">Options Simulator</a></li>
+                <li><a href="famous-investors.html">Investors</a></li>
+                <li><a href="key-rules.html">Key Rules</a></li>
+                <li><a href="about-contact.html">About & Contact</a></li>
+            </ul>
+            <div class="hamburger"><span></span><span></span><span></span></div>
+        </nav>
+    </header>
+
+    <section class="hero" style="padding: 3rem 2rem;">
+        <div class="hero-content">
+            <h1>About & Contact</h1>
+            <p>Learn more about the mission behind this site and how to get in touch.</p>
+        </div>
+    </section>
+
+    <div class="about-section">
+        <h2>About This Site</h2>
+        <p>Stock Investing Essentials is a free educational resource created by <strong>Dr. Don Woods</strong> to help individuals understand timeless principles of stock investing — from basics and value strategies to risk management, margin, and options.</p>
+        <p>The content draws from classic investors like Benjamin Graham, Warren Buffett, Peter Lynch, and others, with interactive tools to make learning practical and engaging.</p>
+        <p>Mission: Empower everyday people with clear, no-hype knowledge so they can invest with discipline and confidence.</p>
+    </div>
+
+    <div class="contact-section">
+        <h2>Get in Touch</h2>
+        <p>Questions, feedback, or topic suggestions? I'd love to hear from you.</p>
+
+        <div class="social-links" style="text-align:center; margin: 1.5rem 0;">
+            <a href="https://x.com/DonaldW60852684" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+            <!-- Add email link if you want -->
+            <a href="mailto:your.email@example.com"><i class="fas fa-envelope"></i></a>
+        </div>
+
+        <!-- Simple Formspree contact form (free tier) -->
+        <form action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" rows="6" placeholder="Your Message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+
+        <p style="margin-top:1rem; font-size:0.9rem; color:#666;">
+            Or reach out directly on X: <a href="https://x.com/DonaldW60852684">@DonaldW60852684</a>
+        </p>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Dr. Don Woods. Built with Grok's help. | <a href="index.html">Home</a></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
